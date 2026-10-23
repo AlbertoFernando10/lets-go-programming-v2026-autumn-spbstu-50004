@@ -9,10 +9,19 @@ import (
 
 type IntHeap []int
 
-func (h IntHeap) Len() int           { return len(h) }
-func (h IntHeap) Less(i, j int) bool { return h[i] < h[j] }
-func (h IntHeap) Swap(i, j int)      { h[i], h[j] = h[j], h[i] }
-func (h *IntHeap) Push(x any)        { *h = append(*h, x.(int)) }
+func (h *IntHeap) Len() int           { return len(*h) }
+func (h *IntHeap) Less(i, j int) bool { return (*h)[i] < (*h)[j] }
+func (h *IntHeap) Swap(i, j int)      { (*h)[i], (*h)[j] = (*h)[j], (*h)[i] }
+
+func (h *IntHeap) Push(x any) {
+	val, ok := x.(int)
+	if !ok {
+		return
+	}
+
+	*h = append(*h, val)
+}
+
 func (h *IntHeap) Pop() any {
 	old := *h
 	n := len(old)
@@ -22,18 +31,18 @@ func (h *IntHeap) Pop() any {
 	return x
 }
 
-func kthLargest(arr []int, k int) int {
-	h := &IntHeap{}
+func kthLargest(arr []int, kValue int) int {
+	minHeap := &IntHeap{}
 	for _, v := range arr {
-		if h.Len() < k {
-			heap.Push(h, v)
-		} else if v > (*h)[0] {
-			heap.Pop(h)
-			heap.Push(h, v)
+		if minHeap.Len() < kValue {
+			heap.Push(minHeap, v)
+		} else if v > (*minHeap)[0] {
+			heap.Pop(minHeap)
+			heap.Push(minHeap, v)
 		}
 	}
 
-	return (*h)[0]
+	return (*minHeap)[0]
 }
 
 func main() {
@@ -51,16 +60,16 @@ func main() {
 		}
 	}
 
-	var k int
-	if _, err := fmt.Fscan(reader, &k); err != nil {
+	var kValue int
+	if _, err := fmt.Fscan(reader, &kValue); err != nil {
 		return
 	}
 
-	if k < 1 || k > arrLen {
+	if kValue < 1 || kValue > arrLen {
 		_, _ = fmt.Println(-1)
 
 		return
 	}
 
-	_, _ = fmt.Println(kthLargest(arr, k))
+	_, _ = fmt.Println(kthLargest(arr, kValue))
 }
