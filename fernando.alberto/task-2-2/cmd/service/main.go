@@ -1,7 +1,10 @@
 package main
 
 import (
+	"bufio"
 	"container/heap"
+	"fmt"
+	"os"
 )
 
 type IntHeap []int
@@ -34,4 +37,30 @@ func kthLargest(arr []int, k int) int {
 }
 
 func main() {
+	reader := bufio.NewReader(os.Stdin)
+
+	var arrLen int
+	if _, err := fmt.Fscan(reader, &arrLen); err != nil {
+		return
+	}
+
+	arr := make([]int, arrLen)
+	for i := range arr {
+		if _, err := fmt.Fscan(reader, &arr[i]); err != nil {
+			return
+		}
+	}
+
+	var k int
+	if _, err := fmt.Fscan(reader, &k); err != nil {
+		return
+	}
+
+	if k < 1 || k > arrLen {
+		_, _ = fmt.Println(-1)
+
+		return
+	}
+
+	_, _ = fmt.Println(kthLargest(arr, k))
 }
