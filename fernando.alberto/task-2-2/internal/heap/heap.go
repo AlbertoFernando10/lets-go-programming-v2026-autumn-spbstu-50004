@@ -31,13 +31,14 @@ func (h *IntHeap) Push(x any) {
 
 func (h *IntHeap) Pop() any {
 	old := *h
-	n := len(old)
-	if n == 0 {
+	length := len(old)
+
+	if length == 0 {
 		return nil
 	}
 
-	x := old[n-1]
-	*h = old[:n-1]
+	x := old[length-1]
+	*h = old[:length-1]
 
 	return x
 }
